@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Brand Placement Analysis</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="site-header">
+      <h1>Brand Placement Analysis</h1>
+      <p class="tagline">Upload a short clip — detect brands, optional placement sentiment, and brand summaries.</p>
+    </header>
+
+    <main id="main-content" class="main">
+      <section class="upload-panel" aria-labelledby="upload-heading">
+        <h2 id="upload-heading">Analyze video</h2>
+        <form id="analyze-form" data-testid="analyze-form">
+          <div class="field">
+            <label for="video-input">Video clip (10–20 seconds)</label>
+            <input
+              id="video-input"
+              name="video"
+              type="file"
+              accept="video/*"
+              required
+              data-testid="video-upload-input"
+              aria-describedby="video-hint"
+            />
+            <p id="video-hint" class="hint">MP4 or other formats supported by ffmpeg. Max 80MB.</p>
+          </div>
+          <div class="field field-checkbox">
+            <input
+              type="checkbox"
+              id="include-placement"
+              name="includePlacement"
+              value="true"
+              data-testid="include-placement-checkbox"
+            />
+            <label for="include-placement">Rate placement sentiment (extra API call)</label>
+          </div>
+          <div class="field field-checkbox">
+            <input
+              type="checkbox"
+              id="allow-google-search"
+              name="allowGoogleSearch"
+              value="true"
+              data-testid="allow-google-search-checkbox"
+            />
+            <label for="allow-google-search">Allow Google Search for brand summaries (often hits 429 on free tier)</label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" id="submit-button" data-testid="analyze-submit-button">
+              Run agent
+            </button>
+            <button
+              type="button"
+              id="stop-button"
+              class="stop-button"
+              disabled
+              data-testid="analyze-stop-button"
+              aria-label="Stop analysis"
+            >
+              Stop
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="status-panel" aria-live="polite" aria-atomic="true">
+        <h2>Progress</h2>
+        <p id="status-message" class="status-message" data-testid="analyze-status-message">
+          Ready.
+        </p>
+        <ol id="progress-log" class="progress-log" data-testid="analyze-progress-log"></ol>
+      </section>
+
+      <section class="results-panel" aria-labelledby="results-heading">
+        <h2 id="results-heading">Results</h2>
+        <p id="empty-results" class="empty-results">No results yet. Upload a video to begin.</p>
+        <div id="flashcards" class="flashcards-grid" data-testid="flashcards-container"></div>
+      </section>
+    </main>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,77 @@
+%% Brand Placement Analysis — end-to-end flow (POC)
+%% Render: npx -y @mermaid-js/mermaid-cli -i docs/brand-flashcard-agent-flow.mmd -o docs/brand-flashcard-agent-flow.svg
+
+flowchart TB
+  subgraph Client["Browser (public/)"]
+    UI[Upload video + options]
+    SSE[Read SSE stream]
+    Cards[Render flashcards]
+    Stop[Stop → POST /api/abort-analysis]
+    UI --> POST
+    POST[POST /api/analyze multipart]
+    POST --> SSE
+    SSE --> Cards
+    Stop -.->|abort signal| Server
+  end
+
+  subgraph Server["server.ts"]
+    Parse[Parse multipart video]
+    Stream[SSE progress events]
+    Server[Node HTTP :3456]
+    Server --> Parse
+    Parse --> Pipeline
+    Pipeline --> Stream
+    Stream --> SSE
+  end
+
+  subgraph Pipeline["pipeline.ts — runAnalysis"]
+    FFMPEG[ffmpeg: 1 fps JPEG frames]
+    Detect[Vision: detect brands per batch]
+    Agg[Aggregate + dedupe brands]
+    Place{Placement enabled?}
+    PlaceAPI[Vision: placement sentiment]
+    Loop[For each brand]
+    FFMPEG --> Detect --> Agg --> Place
+    Place -->|yes| PlaceAPI --> Loop
+    Place -->|no| Loop
+  end
+
+  subgraph Agent["Per-brand bounded agent (max 2 attempts)"]
+    SearchOn{Google Search allowed?}
+    Decide[LLM: needsSearch?]
+    DraftNS[LLM: draft flashcard no search]
+    DraftS[LLM: draft + google_search tool]
+    Fallback[On 429: draft no search]
+    Verdict[LLM: self-verdict confidence]
+    Retry{low + actionable gaps?}
+    Loop --> SearchOn
+    SearchOn -->|no| DraftNS
+    SearchOn -->|yes| Decide
+    Decide -->|skip| DraftNS
+    Decide -->|search| DraftS
+    DraftS -->|429| Fallback
+    DraftS --> Verdict
+    DraftNS --> Verdict
+    Fallback --> Verdict
+    Verdict --> Retry
+    Retry -->|yes, attempt < 2| Loop
+    Retry -->|no| DoneBrand[Brand flashcard + steps log]
+  end
+
+  subgraph Gemini["Google Gemini API"]
+    G1[generateObject / generateText]
+    G2[Google Search grounding optional]
+    G1 --- G2
+  end
+
+  subgraph Guard["rateLimit.ts + abort.ts"]
+    RPM[Sliding RPM + min spacing]
+    Abort[AbortSignal / partial on stop]
+    RPM --> G1
+    Abort --> Pipeline
+  end
+
+  Pipeline --> Agent
+  Agent --> G1
+  DoneBrand --> Result[AnalysisResult JSON]
+  Result --> Stream

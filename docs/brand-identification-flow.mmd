@@ -1,0 +1,28 @@
+%% Brand identification & flashcards — simplified (no rate limits / infra)
+%% Render: npx -y @mermaid-js/mermaid-cli -i docs/brand-identification-flow.mmd -o docs/brand-identification-flow.svg
+
+flowchart TB
+  Start([Short video clip]) --> Frames[Extract frames at 1 fps]
+  Frames --> Vision[Vision model: brands in each frame]
+  Vision --> Merge[Merge duplicates across frames]
+  Merge --> Any{Any brands found?}
+  Any -->|no| Empty([No flashcards])
+  Any -->|yes| Place{Rate placement? optional}
+  Place -->|yes| Sentiment[Vision: placement sentiment per brand]
+  Place -->|no| Brands[List of brands + context]
+  Sentiment --> Brands
+
+  Brands --> Each[For each brand]
+  Each --> Search{Use Google Search? optional}
+  Search -->|no| Draft[Write flashcard from model knowledge]
+  Search -->|yes| Web[Search web then write flashcard]
+  Web --> Draft2[Flashcard + source links]
+  Draft --> Check[Self-check: is the card good enough?]
+  Draft2 --> Check
+  Check --> Ok{Confidence OK?}
+  Ok -->|yes| Card([Flashcard for brand])
+  Ok -->|no, one retry left| Hints[Refine with missing-fact hints]
+  Hints --> Draft
+  Ok -->|no, out of retries| Card
+  Card --> Each
+  Card --> Done([All flashcards shown in UI])

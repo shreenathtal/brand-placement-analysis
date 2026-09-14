@@ -1,0 +1,265 @@
+:root {
+  --bg: #0f1419;
+  --surface: #1a2332;
+  --border: #2d3a4f;
+  --text: #e8eef7;
+  --muted: #9aa8bc;
+  --accent: #5b9fd4;
+  --accent-hover: #7ab3e0;
+  --success: #6bcf8a;
+  --warning: #e8c468;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--accent);
+  color: #000;
+  padding: 0.5rem 1rem;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+.site-header {
+  padding: 2rem 1.5rem 1rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.site-header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+}
+
+.tagline {
+  margin: 0;
+  color: var(--muted);
+}
+
+.main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.upload-panel,
+.status-panel,
+.results-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+}
+
+h2 {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+input[type="file"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.hint {
+  margin: 0.35rem 0 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+button[type="submit"],
+.stop-button {
+  min-height: 48px;
+  padding: 0.6rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+button[type="submit"] {
+  background: var(--accent);
+  color: #0a0f14;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.stop-button {
+  background: transparent;
+  color: var(--warning);
+  border: 1px solid var(--warning);
+}
+
+.stop-button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--warning) 12%, transparent);
+}
+
+button[type="submit"]:disabled,
+.stop-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+button[type="submit"]:focus-visible,
+.stop-button:focus-visible {
+  outline: 2px solid var(--accent-hover);
+  outline-offset: 2px;
+}
+
+.status-message {
+  margin: 0 0 0.75rem;
+  font-weight: 500;
+}
+
+.progress-log {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.empty-results {
+  color: var(--muted);
+  margin: 0;
+}
+
+.empty-results.hidden {
+  display: none;
+}
+
+.flashcards-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.flashcard {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  background: var(--bg);
+}
+
+.flashcard h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.flashcard-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-size: 0.75rem;
+}
+
+.badge.search-yes {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.badge.placement-positive {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.badge.placement-neutral {
+  border-color: var(--muted);
+  color: var(--muted);
+}
+
+.badge.placement-negative {
+  border-color: var(--warning);
+  color: var(--warning);
+}
+
+.placement-note {
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.flashcard p.summary {
+  margin: 0 0 0.75rem;
+}
+
+.flashcard ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.flashcard .sources {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.flashcard .sources a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.agent-steps {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.agent-steps summary {
+  cursor: pointer;
+  color: var(--accent);
+}

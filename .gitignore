@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.local
+output.json
+.tmp/
+uploads/
+samples/clips/assets/
+samples/clips/segments/
+samples/clips/*.mp4
+samples/clips/manual/
+*.tsbuildinfo
+
+.DS_Store
